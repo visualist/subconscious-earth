@@ -1,0 +1,147 @@
+
+/* url: 'http://earthquake.usgs.gov/earthquakes/feed/csv/all/hour', */
+
+$(document).ready(function() {
+  get_data(process_data);
+});
+
+function get_data(fn) {
+  $.jsonp({
+    url: 'http://earthquake.usgs.gov/earthquakes/feed/geojsonp/all/hour',
+    callback: "eqfeed_callback",
+    success: function(json) {
+      //console.log("Success w/$.jsonp");
+      //console.log(json);
+      fn(json.features);
+    },
+    error: function() {
+       console.log("Failure w/$.jsonp");
+    }
+  });
+}
+
+function process_data(d) {
+  console.log('d');
+  console.log(d);
+}
+
+
+
+/*
+var d;
+
+function eqfeed_callback(data) {
+      //document.getElementById("response").textContent = JSON.stringify(data);
+  console.log(data);
+  d = data;
+  return JSON.parse(data);
+}
+
+
+var eqs = new Miso.Dataset({
+  url: 'http://earthquake.usgs.gov/earthquakes/feed/geojsonp/all/hour',
+  jsonp: true,
+  //callback: eqs_callback,
+  extract: function(response) {
+    console.log("xx");
+    console.log(response.data);
+    return response.data;
+  }
+});
+
+eqs.fetch({
+  success: function() {
+    console.log("Success! whatever that means");
+    log("Available Columns:" + this.columnNames());
+    log("There are " + this.length + " rows");
+  },
+  error: function(e) {
+    console.log("Oops!");
+    console.log(this);
+  }
+});
+*/
+
+
+/*
+var eqs_csv = new Miso.Dataset({
+  url: '/data/usgs.csv',
+  skipRows: 1,
+  columns : [
+    { name: 'DateTime',   type: "string"},
+    { name: 'Latitude',   type: "string"},
+    { name: 'Longitude',  type: "string"},
+    { name: 'Depth',      type: "string"},
+    { name: 'Magnitude',  type: "string"},
+    { name: 'MagType',    type: "string"},
+    { name: 'NbStations', type: "string"},
+    { name: 'Gap',        type: "string"},
+    { name: 'Distance',   type: "string"},
+    { name: 'RMS',        type: "string"},
+    { name: 'Source',     type: "string"},
+    { name: 'EventID',    type: "string"},
+    { name: 'Version',    type: "string"}
+  ]
+});
+*/
+/*
+    datetime:   2013-03-22T19:43:41.280+00:00,
+    latitude:   39.623,
+    longitude:  -120.003,
+    depth:      7.2,
+    magnitude:  0.7,
+    magtype:    ml,
+    nbStations: 6,
+    gap:        117,
+    distance:   0.0,
+    rms:        0.05,
+    source:     nn,
+    eventid:    nn00406762,
+    version:    1363981505148
+*/
+
+
+
+/*
+var ds = new Miso.Dataset({
+  url : "/data/uranium.csv",
+  delimiter : ",",
+  columns : [
+    { name : "year", type : "time", format : "YYYY" }
+  ]
+});
+*/
+
+//var s = function(o) { log("object: ", o); };
+
+/*
+var ds2 = new Miso.Dataset({
+  url: '/data/data.json'
+});
+
+ds2.fetch({ success: function() {
+  log("Column Names: ", ds2.columnNames());
+}});
+*/
+
+/*
+var ds = new Miso.Dataset({ url : "/data/data.json" });
+ds.fetch({
+  success: function() {
+    console.log("ds:")
+    console.log(ds);
+  }
+});
+*/
+
+/*
+ds2.fetch({
+  success: function() {
+    log( this ); // column('two').data );
+  }
+});
+*/
+
+//log( ds2 instanceof Miso.Dataset );
+
+
