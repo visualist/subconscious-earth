@@ -20,7 +20,9 @@ var viewport;
 function enqueue(url) {
   if (url) {
     //console.log("ENQUEUE: " + url);
-    var img = $('<img/>').attr({src: url});
+    var proxy_url = '/proxy?url=' + url; // might need encoding of some sort
+console.log("PROXY URL: " + proxy_url);
+    var img = $('<img/>').attr({src: proxy_url});
     if (viewport.width > 50) {
       img.attr({width: viewport.width});
     }
@@ -33,6 +35,7 @@ function enqueue(url) {
 $(document).ready(function(){
 
   viewport = getViewport();
+
 
 /*
   var c = new PhotoGroup({
@@ -53,6 +56,7 @@ $(document).ready(function(){
   var c = new Corpus({id: 'Frankenstein-Shelley.txt' }); // use only sections 3..57 
   var eqData = new EqData({corpus: c});
   eqData.miso_fetch();
+
 
 });
 

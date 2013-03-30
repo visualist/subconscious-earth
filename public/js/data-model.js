@@ -72,7 +72,8 @@ var EqData = Backbone.Model.extend({
     self.eq_events = {};
     self.eq_eventstack = [];
     self.eqs = new Miso.Dataset({
-      url: 'http://earthquake.usgs.gov/earthquakes/feed/csv/all/hour',
+      url: '/proxy?url=http://earthquake.usgs.gov/earthquakes/feed/csv/all/hour',
+      interval : 60000,
       //url: '/data/usgs3.csv',
       delimiter : ",",
     });
@@ -116,7 +117,7 @@ var EqData = Backbone.Model.extend({
   // TODO: fix.  This here for now
   onEq: function() {
     var self = this;
-    //console.log("EQ Event");
+    console.log("EQ Event");
     _.each(self.eq_eventstack, function(eqe) {
       //console.log("ev: " + eqe);
       var s = self.eq_events[eqe];

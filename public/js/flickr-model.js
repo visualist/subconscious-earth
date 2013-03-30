@@ -9,13 +9,14 @@ cfg.user = '7587371@N06';
 
 
 var Photo = Backbone.Model.extend({
-    model: Photo,
+    //model: Photo,
 
     /* Initialization parameters:
      *   url   the location of the image [required]
      */
     initialize: function(options) {
         var model = this;
+        // console.log("Flickr-URL: " + options.url);
         model.url = options.url;
 
         model.loaded = false;
