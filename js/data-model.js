@@ -45,12 +45,16 @@ var Corpus = Backbone.Model.extend({
     });
     var words = _.compact(w).slice(0, word_len);
     return words.join(" ");
-  },
+  }
+
+//,
 
   /* TODO: move this into a VIEW */
+/*
   render: function(words, lon, lat, dep, mag) {
     console.log(words + '@' + mag );
   }
+*/
 
 });
 
@@ -68,7 +72,8 @@ var EqData = Backbone.Model.extend({
     self.eq_events = {};
     self.eq_eventstack = [];
     self.eqs = new Miso.Dataset({
-      url: '/data/usgs2.csv',
+      url: 'http://earthquake.usgs.gov/earthquakes/feed/csv/all/hour',
+      //url: '/data/usgs3.csv',
       delimiter : ",",
     });
     self.on("eq", function() { self.onEq(); }, self);
@@ -117,7 +122,8 @@ var EqData = Backbone.Model.extend({
       var s = self.eq_events[eqe];
       //console.log("mag: " + s.mag);
       words = self.corpus.by_location(s.lon, s.lat, s.dep, s.mag);
-      self.corpus.render(words, s.lon, s.lat, s.dep, s.mag);
+      //self.corpus.render(words, s.lon, s.lat, s.dep, s.mag);
+      console.log(words + '@@' + s.mag );
     });
   }
 

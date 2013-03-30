@@ -1,4 +1,6 @@
 
+//console.log("flickr-model.js");
+
 window.cfg = {};
 cfg.console_log = console.log;
 cfg.flickr_url = 'http://api.flickr.com/services/rest/';
@@ -64,7 +66,7 @@ var Scene = Backbone.Model.extend({
     
 });
 
-var Gallery = Backbone.Collection.extend({
+var PhotoGroup = Backbone.Collection.extend({
     model: Scene,
 
     /*
@@ -78,11 +80,22 @@ var Gallery = Backbone.Collection.extend({
      *  - get image text (for current)
      */
 
-    initialize: function(models, options) {
+    initialize: function(options) {
         var self = this;
-        this.photoset_id = options.set;
+        this.text = options.text;
         this.current_index = 0;
         this.current = null;
+        this.per_page = options.per_page ? options.per_page : 5;
+        this.lon = options.lon;
+        this.lat = options.lat;
+        var on_add = options.onAdd;
+        if (on_add) {
+          self.on("add", on_add);
+        }
+        var on_metadata = options.onMetadata;
+        if (on_metadata) {
+          self.on("metadata", on_metadata);
+        }
         this._load_metadata(); // start things into motion
     },
 
@@ -90,27 +103,40 @@ var Gallery = Backbone.Collection.extend({
         var self = this;
         success = success || $.noop;
         this.params = params || this.params;
+        var data_params = {
+          api_key : cfg.key,
+          sort : 'interestingness-desc',
+          text : self.text,
+          extras: 'description,media,url_sq,url_l,url_o,url_b',
+          format : 'json',
+          method : 'flickr.photos.search',
+          per_page : self.per_page,
+          page : 1,
+          license : ''
+        };
+
+        if (self.lon && self.lat) { 
+          data_params['lon'] = self.lon;
+          data_params['lat'] = self.lat;
+          data_params['radius'] = 32;
+        }
         $.ajax({
             url : cfg.flickr_url,
-            data : {
-                api_key : cfg.key,
-                user_id : cfg.user,
-                photoset_id: this.photoset_id,
-                extras: 'description,media,url_sq,url_l,url_o,url_b',
-                format : 'json',
-                method : 'flickr.photosets.getPhotos',
-                per_page : 99,
-                page : 1,
-                license : ''
-            },
+            data : data_params,
             dataType : 'jsonp',
             jsonp : 'jsoncallback',
             success : function (response) {
-                self.add(response.photoset.photo);
+                var photo_list = response.photos.photo;
+//console.log('photo_list');
+//console.log(photo_list);
+                self.add(photo_list);
                 success(self);
             }
         });
     },
+
+    //onAdd: function() {},
+    //onMetadata: function() {},
 
     // PRIVATE - initialization
 
@@ -169,7 +195,7 @@ var Gallery = Backbone.Collection.extend({
         // At this point, 'current', 'next' and 'prev' are ready to use,
         // start loading/pre-loading the images:
         if (cfg.console_log) {
-            console.log("    Gallery#_load_images_at_pointers: SETUP Current");
+            console.log("    PhotoGroup#_load_images_at_pointers: SETUP Current");
         }
 
         var currentScene = model.current;
@@ -185,7 +211,7 @@ var Gallery = Backbone.Collection.extend({
             model.trigger("current");
         } else {
             if (cfg.console_log) {
-                console.log("    Gallery#_load_images_at_pointers: current not ready");
+                console.log("    PhotoGroup#_load_images_at_pointers: current not ready");
             }
             currentScene.on("scene:imageloaded", function() {
                 model.trigger("current");
