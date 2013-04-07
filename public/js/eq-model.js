@@ -1,5 +1,4 @@
 
-
 var Earthquake = Backbone.Model.extend({
   initialize: function() {
     var self = this;
@@ -16,40 +15,33 @@ var Earthquake = Backbone.Model.extend({
 var EqDataSource = Backbone.Collection.extend({
   model: Earthquake,
 
-  events: {
-    "eq" : "onEq"
-  },
-
   initialize: function(options) {
     var self = this;
-    //self.corpus = options.corpus;
-    self.eq_events = {};
-    self.eq_eventstack = [];
     self.eqs = new Miso.Dataset({
       url: '/proxy?url=http://earthquake.usgs.gov/earthquakes/feed/csv/all/hour',
       //url: '/proxy?url=http://earthquake.usgs.gov/earthquakes/feed/csv/2.5/day',
       interval : 60000, // once per minute
-      //url: '/data/usgs3.csv',
-      delimiter : ",",
+      resetOnFetch: true, // let Backbone accumulate data, not Miso
+      delimiter : ","
     });
-    self.on("eq", function() { self.onEq(); }, self);
   },
 
   miso_fetch: function() {
     var self = this;
+    var _eq_events = {};
+
     self.eqs.fetch({
       success: function() {
-        //console.log('success');
+        var _existing = _.map(self.models, function(m) {return m.get('id');});
+        var _new = []; //incoming from fetch, determined in 'loop' below
 
-        var how_many_changed = 0;
         this.each(function(row){
-          // Question: does eq_events only ever accumulate?
           var event_id = row.EventID;
-
-          if (!self.eq_events[event_id]) {
-            //console.log("Adding: " + event_id);
-            how_many_changed++;
+          // all "NEW events" coming in this fetch-round..
+          _new.push(event_id);
+          if (! _eq_events[event_id]) {
             var earthquake_event = {
+              id       : event_id,
               event_id : event_id,
               time     : row.DateTime,
               lon      : row.Longitude,
@@ -65,40 +57,52 @@ var EqDataSource = Backbone.Collection.extend({
               version  : row.Version,
               rendered : false
             };
-            self.eq_events[event_id] = earthquake_event;
-            self.eq_eventstack.push(event_id);
-            self.add(earthquake_event, {id: event_id});
+            _eq_events[event_id] = earthquake_event;
+            // Note: the 'add' could go here
           }
-
         });
-        if (how_many_changed>0) {
-          self.trigger("eq", how_many_changed);
-        }
-      },
+
+        // Enter, Exit, Update : concepts borrowed from D3
+        var _enter = _.difference(_new, _existing);
+        var _exit = _.difference(_existing, _new);
+        var _update = _.intersection(_new, _existing);
+
+        /*
+         *   _new       ==  new/incoming items from the USGS API
+         *   _existing  ==  current items
+         *
+         *   _enter     ==  added to active list
+         *   _exit      ==  removed from active list
+         *   _update    ==  no change from previous round
+         */
+
+        console.log("Enter:" + _enter.length +
+                  ", Exit:" + _exit.length +
+                  ", Update:" + _update.length);
+
+        _.each(_exit, function(eq_event_id){
+          var model = self.get(eq_event_id);
+          self.remove(model);
+        });
+
+        _.each(_enter, function(eq_event_id){
+          var earthquake_event = _eq_events[eq_event_id];
+          self.add(earthquake_event);
+        });
+
+        _.each(_update, function(eq_event_id) {
+          var model = self.get(eq_event_id);
+          self.trigger("update", model);
+        });
+
+      },//end-success
+
       error: function(e) {
         console.log("Oops!");
       }
-    });
-  },
 
-  onEq: function() {}
-
-/*
-  // TODO: fix.  This here for now
-  onEq: function() {
-    var self = this;
-    console.log("EQ Event");
-    _.each(self.eq_eventstack, function(eqe) {
-      //console.log("ev: " + eqe);
-      var s = self.eq_events[eqe];
-      //console.log("mag: " + s.mag);
-      words = self.corpus.by_location(s.lon, s.lat, s.dep, s.mag);
-      //self.corpus.render(words, s.lon, s.lat, s.dep, s.mag);
-      console.log(words + '@@' + s.mag );
-    });
-  }
-*/
+    }); //fetch
+  },//miso-fetch
 
 });
-
 
