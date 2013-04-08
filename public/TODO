@@ -1,0 +1,9 @@
+Mon Apr  8 17:36:54 CDT 2013
+
+ * image width to match viewport
+ * using magnitude and depth
+	 * opacity
+	 * canvas blur - probably will have to proxy the flickr requests
+ * update to provide ongoing changes (diminish image)
+ * removes not implemented yet
+

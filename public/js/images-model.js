@@ -18,25 +18,25 @@
 var ImageModel = Backbone.Model.extend({
 
   initialize: function() {
-    console.log('img model');
-    console.log(this);
+    //console.log('img model');
+    //console.log(this);
     this.set('image_id', 'i' + this.get('id'));
-    var url = this.find_first(['url_l', 'url_o', 'url_b', 'url_c', 'url_z']);
+    var url = this.find_first(['url_l', 'url_o', 'url_b', 'url_c', 'url_z', 'url_sq']);
     if (url) {
       this.set('proxy_url', '/proxy?url=' + url);
     } else {
-      console.log("GOING NOWHERE FAST!");
+      console.log("No available URL found for " + this.get('id'));
     }
   },
 
   find_first: function(list) {
     var self = this;
-    _.each(list, function(item) {
-      var candidate = self.get(item);
+    for (var i = 0; i < list.length; i++) {
+      var candidate = self.get(list[i]);
       if (candidate) {
         return candidate;
-      }
-    });
+      } 
+    }
     return false;
   }
 

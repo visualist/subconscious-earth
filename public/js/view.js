@@ -23,7 +23,7 @@ var ImagesView = Backbone.View.extend({
     if (vp_width > 50) {
       img.attr({width: vp_width});
     }
-    img.css({opacity: 0.11});
+    img.css({opacity: 0.21});
     $('#images').append(img);
   },
 
@@ -65,7 +65,11 @@ var CombinedView = Backbone.View.extend({
     var s = eqevent + ': ' + strength + ' ' + latlon;
     var li_element = '<li id="' + event_id +  '">' + s + '</li>';
 
-    $('#eq-events').append(li_element);
+    // show the event in text:
+    //$('#eq-events').append(li_element);
+    console.log(s);
+
+    // trigger image display:
     this.image_data.request_add(event_id, lat, lon, mag, depth);
   },
 
