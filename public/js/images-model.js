@@ -54,6 +54,16 @@ var ImageDataSource = Backbone.Collection.extend({
   initialize: function(options) {
     _.bindAll(this, 'flickr_search');
     this.__whoami = 'ImageDataSource'; //debugging
+    this.base_params = {
+      api_key : cfg.key,
+      sort : 'interestingness-desc',
+      extras: 'description,media,url_sq,url_l,url_o,url_b',
+      format : 'json',
+      method : 'flickr.photos.search',
+      per_page : 1,
+      page : 1,
+      license : ''
+    };
   },
 
   // "Public API" - used from CombinedView:
@@ -64,12 +74,16 @@ var ImageDataSource = Backbone.Collection.extend({
   request_add: function(id, latitude, longitude, magnitude, depth) {
     // presently, magnitude & depth are ignored/not used.
     //console.log('ImageDataSource :: request_add');
+
+    // TODO: change this call-interface, fold into a single object.
     this.flickr_search({
       lon: longitude,
       lat: latitude,
       radius: 32
     },{
       __whoami: 'rider',
+      lon: longitude,
+      lat: latitude,
       mag: magnitude,
       depth: depth,
       eqid: id
@@ -78,31 +92,51 @@ var ImageDataSource = Backbone.Collection.extend({
 
   flickr_search: function(params, rider) {
         var self = this;
-        var base_params = {
-          api_key : cfg.key,
-          sort : 'interestingness-desc',
-          extras: 'description,media,url_sq,url_l,url_o,url_b',
-          format : 'json',
-          method : 'flickr.photos.search',
-          per_page : 1,
-          page : 1,
-          license : ''
-        };
-        var data_params = _.extend(base_params, params);
+	var data_params = _.extend(self.base_params, params);
         $.ajax({
             url : cfg.flickr_url,
             data : data_params,
             dataType : 'jsonp',
             jsonp : 'jsoncallback',
             success : function (response, msg) {
-                console.log("  Flickr response: " + msg + " (" + rider.eqid + ")");
                 var photo_list = response.photos.photo;
-                var combo = _.extend(photo_list, rider);
-                self.add( photo_list, rider );
+                var result_count = photo_list.length;
+                console.log("  Flickr-search response: " + msg + " (" + rider.eqid + ") " + result_count);
+                if (photo_list instanceof Array && result_count > 0) {
+                  self.add( photo_list, rider );
+                } else {
+                  self.secondary_search(rider);
+                }
             },
             error : function(response, msg) {
-                console.log(" *Flickr response: " + msg);
+                console.log(" *Flickr-search response: " + msg);
             }
+        });
+  },
+
+  secondary_search: function(eq_event) {
+        //console.log("Secondary search");
+        var self = this;
+        var params = {
+            text: 'birds'
+        }
+	var data_params = _.extend(self.base_params, params);
+        $.ajax({
+            url : cfg.flickr_url,
+            data : data_params,
+            dataType : 'jsonp',
+            jsonp : 'jsoncallback',
+            success : function (response, msg) {
+                var photo_list = response.photos.photo;
+                var result_count = photo_list.length;
+                console.log("  Secondary-search response: " + msg + " (" + eq_event.eqid + ") " + result_count);
+                if (photo_list instanceof Array && result_count > 0) {
+                  self.add( photo_list, eq_event );
+                }
+            },
+            error : function (response, msg) {
+                console.log(" *Secondary-search response: " + msg);
+            },
         });
   },
 
