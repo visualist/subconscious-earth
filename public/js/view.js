@@ -19,15 +19,21 @@ var ImagesView = Backbone.View.extend({
     var vp_width = viewport.width;
     var url = img_model.get('proxy_url');
     var iid = img_model.get('image_id');
+    console.log("add-image: " + iid + " for " + img_model.get('eqid'));
+
+    var opacity_by_mag = (parseFloat(img_model.get('mag')) / 12.0);
     var img = $('<img/>').attr({src: url, id: iid});
     if (vp_width > 50) {
       img.attr({width: vp_width});
     }
-    img.css({opacity: 0.21});
+    img.css({opacity: opacity_by_mag});
     $('#images').append(img);
   },
 
   onRemove: function(img_model) {
+    var iid = img_model.get('image_id');
+    console.log("remove-image: " + iid);
+    $('#' + iid).remove();
   },
 
   onUpdate: function(img_model)  {
@@ -36,6 +42,8 @@ var ImagesView = Backbone.View.extend({
 });
 
 
+// CombinedView works more like a controller, passes requests
+// through to the 'image_data' reference to add/update EQ events.
 
 var CombinedView = Backbone.View.extend({
 

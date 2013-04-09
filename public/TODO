@@ -1,9 +1,25 @@
-Mon Apr  8 17:36:54 CDT 2013
+Mon Apr  8 20:14:46 CDT 2013
+
+ POSSIBLE BUG: Do I have a bug between when the Flickr response returns (and
+ seems to work find) and getting the model created? Something seems to get
+ lost between these two pieces, for some of the items, judging from the console
+ messages.
+
+
+ 1. [DONE] use magnitude for opacity
+ 2. [DONE] implement removes
+
+ 3. implement updates: provide ongoing changes (ie, diminish image)
+ 4. depth for canvas blur - probably will have to proxy the flickr requests
+
+ * consider, when no images are found for a given lat-long, then using
+   the corpus-text to create search terms for image-lookup
 
  * image width to match viewport
- * using magnitude and depth
-	 * opacity
-	 * canvas blur - probably will have to proxy the flickr requests
- * update to provide ongoing changes (diminish image)
- * removes not implemented yet
+   * CSS (and markup) adjustments to rid the horizontal/vertical scrollbars
+
+ * [partially working] secondary search when the first attempt at getting
+   an image does not result. need to incorporate the corpus-lookup into this
+   process
+
 

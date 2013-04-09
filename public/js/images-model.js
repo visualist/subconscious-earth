@@ -17,12 +17,17 @@
 
 var ImageModel = Backbone.Model.extend({
 
-  initialize: function() {
-    //console.log('img model');
-    //console.log(this);
+  initialize: function(ignore1, options) {
+    this.set('depth', options.depth);
+    this.set('eqid', options.eqid);
+    console.log("IMAGE MODEL(" + options.eqid + ")");
+    this.set('mag', options.mag);
     this.set('image_id', 'i' + this.get('id'));
+
     var url = this.find_first(['url_l', 'url_o', 'url_b', 'url_c', 'url_z', 'url_sq']);
     if (url) {
+      var eqid = this.get('eqid');
+      console.log("-flickr image for eq " + eqid + "at " + url);
       this.set('proxy_url', '/proxy?url=' + url);
     } else {
       console.log("No available URL found for " + this.get('id'));
@@ -48,7 +53,7 @@ var ImageDataSource = Backbone.Collection.extend({
 
   initialize: function(options) {
     _.bindAll(this, 'flickr_search');
-    this.whoami = 'ImageDataSource'; //debugging
+    this.__whoami = 'ImageDataSource'; //debugging
   },
 
   // "Public API" - used from CombinedView:
@@ -63,10 +68,15 @@ var ImageDataSource = Backbone.Collection.extend({
       lon: longitude,
       lat: latitude,
       radius: 32
+    },{
+      __whoami: 'rider',
+      mag: magnitude,
+      depth: depth,
+      eqid: id
     });
   },
 
-  flickr_search: function(params) {
+  flickr_search: function(params, rider) {
         var self = this;
         var base_params = {
           api_key : cfg.key,
@@ -84,9 +94,14 @@ var ImageDataSource = Backbone.Collection.extend({
             data : data_params,
             dataType : 'jsonp',
             jsonp : 'jsoncallback',
-            success : function (response) {
+            success : function (response, msg) {
+                console.log("  Flickr response: " + msg + " (" + rider.eqid + ")");
                 var photo_list = response.photos.photo;
-                self.add(photo_list);
+                var combo = _.extend(photo_list, rider);
+                self.add( photo_list, rider );
+            },
+            error : function(response, msg) {
+                console.log(" *Flickr response: " + msg);
             }
         });
   },
