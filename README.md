@@ -94,3 +94,31 @@ If you have all the requirements in-place, running the shell script
 called start.sh is all that is required. I am using Ruby 1.9.3,
 Sinatra 1.3.2; this is on a Mac running OS X Mountain Lion.
 
+If you are starting from scratch, you will need Ruby and its gems
+to be installed, and I recommend 'rvm' for all that is required.
+But, before that, if you're starting from a Mac which has none of
+these things, then you will need to setup Xcode (C/C++ compiler),
+Homebrew is nice to have, and finally 'rvm' for managing your Ruby
+software environment. http://bit.ly/Njo8XD is one person's set of
+instructions to get started.
+
+Once you have 'rvm' you can install a Ruby; for this projet I have
+used ruby-1.9.3-p392, but I'm sure newer versions will also work.
+Following that, there is a .rvmrc in the project which will create
+a gemset called subearth. The first time you 'cd' into the project
+directory with rvm installed, it will ask to use it, and by all
+means do use it! With the empty gemset created, the second step
+is to populate it (bundle install) which is to say install the
+required gems into this gemset. Finally, you can then start the
+sinatra server and then hit it with a browser.
+
+Here are the steps (once you have rvm available):
+* rvm install ruby-1.9.3-p392
+* bundle install
+* bash start.sh
+* point your browser at http://localhost:4567 (default port)
+
+You might also look at the console log in your browser as this
+is running. Definitely a work in progress. Feel free to contact
+me for any questions, etc.  wade at umn dot edu
+
