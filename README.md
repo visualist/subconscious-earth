@@ -1,3 +1,8 @@
+
+"The idea becomes the machine that makes the art"
+                         -- Sol Lewitt
+
+
 Subconscious Earth
 ==================
 
