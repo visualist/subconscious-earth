@@ -8,19 +8,32 @@ var Earthquake = Backbone.Model.extend({
     self.mag = this.get('mag');
     self.depth = this.get('depth');
     self.time = this.get('time');
+    self.__whoami = 'Earthquake(model)';
   }
 });
+
+
+
+var default_frequency = 60000;
+var default_url = '/proxy?url=http://earthquake.usgs.gov/earthquakes/feed/csv/all/hour';
+//var default_url = '/proxy?url=http://earthquake.usgs.gov/earthquakes/feed/csv/2.5/day';
 
 
 var EqDataSource = Backbone.Collection.extend({
   model: Earthquake,
 
-  initialize: function(options) {
+  initialize: function(models, options) {
     var self = this;
+    self.frequency = default_frequency;
+    self.url = default_url;
+    if (options) {
+      self.frequency = options.frequency || default_frequency;
+      self.url = options.url || default_url;
+    }
+    self.__whoami = 'EqDataSource(collection)';
     self.eqs = new Miso.Dataset({
-      url: '/proxy?url=http://earthquake.usgs.gov/earthquakes/feed/csv/all/hour',
-      //url: '/proxy?url=http://earthquake.usgs.gov/earthquakes/feed/csv/2.5/day',
-      interval : 60000, // once per minute
+      url: self.url,
+      interval : self.frequency,
       resetOnFetch: true, // let Backbone accumulate data, not Miso
       delimiter : ","
     });
@@ -80,14 +93,14 @@ var EqDataSource = Backbone.Collection.extend({
                   ", Exit:" + _exit.length +
                   ", Update:" + _update.length);
 
-        _.each(_exit, function(eq_event_id){
-          var model = self.get(eq_event_id);
-          self.remove(model);
-        });
-
         _.each(_enter, function(eq_event_id){
           var earthquake_event = _eq_events[eq_event_id];
           self.add(earthquake_event);
+        });
+
+        _.each(_exit, function(eq_event_id){
+          var model = self.get(eq_event_id);
+          self.remove(model);
         });
 
         _.each(_update, function(eq_event_id) {

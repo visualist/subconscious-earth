@@ -295,13 +295,26 @@ td { vertical-align: top; }
 
 /* CUSTOM */
 
-#images {
+#images, #canvases {
   position: relative;
 }
 
-#images img {
+#images img, #canvases canvas {
   position: absolute;
   top: 0;
 }
 
+html, body {
+  width:  100%;
+  height: 100%;
+  margin: 0px;
+}
+
+canvas#not {
+  border: 1px dashed gray;
+}
+
+#hidden-images img {
+  display: none;
+}
 

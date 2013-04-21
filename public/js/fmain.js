@@ -1,9 +1,7 @@
 window.cfg = {};
 //cfg.console_log = console.log;
 cfg.flickr_url = 'http://api.flickr.com/services/rest/';
-cfg.key = '0464d0aeec2d83adbafe505502b91ce5';
-//cfg.user = '7587371@N06';
-
+cfg.key = '2693b44e9b45ca1d5b20a9e9655c9036';
 
 
 var getViewport = function() {
@@ -69,9 +67,8 @@ $(document).ready(function(){
   var imagesView = new ImagesView({collection: imgData});
 
   var eqData = new EqDataSource();
-  var combinedView = new CombinedView({
+  var controller = new EqEventController({
     collection: eqData,
-    greeting: 'ciao',
     image_data: imgData
   });
 

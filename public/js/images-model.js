@@ -52,7 +52,8 @@ var ImageDataSource = Backbone.Collection.extend({
   model: ImageModel,
 
   initialize: function(options) {
-    _.bindAll(this, 'flickr_search');
+    _.bindAll(this, 'flickr_search', 'secondary_search',
+                    'request_add', 'request_remove', 'request_update');
     this.__whoami = 'ImageDataSource'; //debugging
     this.base_params = {
       api_key : cfg.key,
@@ -66,12 +67,13 @@ var ImageDataSource = Backbone.Collection.extend({
     };
   },
 
-  // "Public API" - used from CombinedView:
+  // "Public API" - used from EqEventController (aka CombinedView):
   //    request_add
   //    request_remove
   //    request_update
 
   request_add: function(id, latitude, longitude, magnitude, depth) {
+    console.log("  ImageDataSource: request_add(" + id + " ..)");
     // presently, magnitude & depth are ignored/not used.
     //console.log('ImageDataSource :: request_add');
 
@@ -109,18 +111,19 @@ var ImageDataSource = Backbone.Collection.extend({
                 }
             },
             error : function(response, msg) {
-                console.log(" *Flickr-search response: " + msg);
+                console.log(" *Flickr-search error response: " + msg);
             }
         });
   },
 
   secondary_search: function(eq_event) {
-        //console.log("Secondary search");
+        console.log("Secondary search");
         var self = this;
         var params = {
-            text: 'birds'
-        }
+            text: 'tower'
+        };
 	var data_params = _.extend(self.base_params, params);
+        console.log(data_params);
         $.ajax({
             url : cfg.flickr_url,
             data : data_params,
@@ -135,7 +138,7 @@ var ImageDataSource = Backbone.Collection.extend({
                 }
             },
             error : function (response, msg) {
-                console.log(" *Secondary-search response: " + msg);
+                console.log(" *Secondary-search error response: " + msg);
             },
         });
   },
@@ -151,13 +154,14 @@ var ImageDataSource = Backbone.Collection.extend({
   },
 
   request_remove: function(image_id) {
-    //console.log('ImageDataSource :: request_remove');
+    console.log("  ImageDataSource: request_remove(" + image_id + ")");
     var self = this;
     var model = self.get(image_id);
     self.remove(model);
   },
 
   request_update: function(image_id) {
+    console.log("  ImageDataSource: request_update(" + image_id + ")");
     //console.log('ImageDataSource :: request_update');
     //TBD
   }
