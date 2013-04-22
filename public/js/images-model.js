@@ -94,7 +94,8 @@ var ImageDataSource = Backbone.Collection.extend({
 
   flickr_search: function(params, rider) {
         var self = this;
-	var data_params = _.extend(self.base_params, params);
+	var data_params = {};
+        _.extend(data_params, self.base_params, params);
         $.ajax({
             url : cfg.flickr_url,
             data : data_params,
@@ -117,13 +118,13 @@ var ImageDataSource = Backbone.Collection.extend({
   },
 
   secondary_search: function(eq_event) {
-        console.log("Secondary search");
+        //console.log("Secondary search");
         var self = this;
         var params = {
             text: 'tower'
         };
-	var data_params = _.extend(self.base_params, params);
-        console.log(data_params);
+	var data_params = {};
+        _.extend(data_params, self.base_params, params);
         $.ajax({
             url : cfg.flickr_url,
             data : data_params,
@@ -143,6 +144,7 @@ var ImageDataSource = Backbone.Collection.extend({
         });
   },
 
+/*
   test: function() {
     var self = this;
     var o = {
@@ -152,17 +154,17 @@ var ImageDataSource = Backbone.Collection.extend({
     o.proxy_url = '/proxy?url=' + o.url;
     self.add(o);
   },
+*/
 
   request_remove: function(image_id) {
-    console.log("  ImageDataSource: request_remove(" + image_id + ")");
+    //console.log("  ImageDataSource: request_remove(" + image_id + ")");
     var self = this;
     var model = self.get(image_id);
     self.remove(model);
   },
 
   request_update: function(image_id) {
-    console.log("  ImageDataSource: request_update(" + image_id + ")");
-    //console.log('ImageDataSource :: request_update');
+    //console.log("  ImageDataSource: request_update(" + image_id + ")");
     //TBD
   }
 

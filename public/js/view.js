@@ -36,7 +36,7 @@ function render_to_1canvas(im) {
   }
   var ctx = canvas.getContext('2d');
   ctx.globalAlpha = 0.1;
-  ctx.drawImage(im,0,0);
+  ctx.drawImage(im,0,0, viewport.width, viewport.height);
 }
 
 function render_to_canvases(im) {
