@@ -22,7 +22,7 @@ $(document).ready(function() {
  */
 var once = 1;
 
-function render_to_1canvas(im) {
+function render_to_1canvas(im, hscale, alpha) {
   var canvas;
   if (once-- > 0) {
     canvas = document.createElement('canvas');
@@ -35,32 +35,19 @@ function render_to_1canvas(im) {
     canvas = document.getElementById("c1");
   }
   var ctx = canvas.getContext('2d');
-  ctx.globalAlpha = 0.1;
+  // alpha (0-1): conversion from opacity (0-100 percent)
+  ctx.globalAlpha = alpha;
+
+  // horizontal scaling
+  ctx.scale(hscale, 1.0);
+
   ctx.drawImage(im,0,0, viewport.width, viewport.height);
 }
 
-function render_to_canvases(im) {
-  var canvas = document.createElement('canvas');
-  var canvases = document.getElementById("canvases");
-  canvases.appendChild(canvas);
-  canvas.width  = viewport.width;
-  canvas.height = viewport.height;
-  var ctx = canvas.getContext('2d');
-  ctx.globalAlpha = 0.1;
-  ctx.drawImage(im,0,0);
-}
-
-function render_to_sequence(im) {
-  $('#sequence').append(im);
-}
-
-function render_to_overlapping_divs(im) {
-  $('#images').append(im);
-}
-
-function render_canvas(im) {
-  $('#hidden-images').append(im);
-  render_to_1canvas(im);
+function render_canvas(img, hstretch, opacity) {
+  $('#hidden-images').append(img);
+  var alpha = (opacity / 100.0);
+  render_to_1canvas(img, hstretch, alpha);
 }
 
 
@@ -80,19 +67,28 @@ var ImagesView = Backbone.View.extend({
     var url = img_model.get('proxy_url');
     var iid = img_model.get('image_id'); // flickr image id
     var eid = img_model.get('eqid');
-    console.log("add-image: iid=" + iid + " for " + img_model.get('eqid'));
+    var depth = img_model.get('depth');
+    var mag = img_model.get('mag');
+    console.log("add-image: iid=" +iid +" for " +img_model.get('eqid') +": " + depth);
 
-    var opacity_by_mag = (parseFloat(img_model.get('mag')) / 12.0);
+    /*
+     * Apply effects to the image
+     */
+
+    // depth translates to blur, from 0-800 range to 0.0-3.0
+    var blur_by_depth = (depth / 200.0);
+
+    // mag(nitude) translates to opacity & horizontal-stretch
+    //   ranges:: mag: 0-10, opacity: 10-90 percent, hstretch: 1.0-3.0
+    //var opacity_by_mag = (parseFloat(img_model.get('mag')) / 12.0);
+    var opacity_by_mag = Math.floor(8.0 * mag + 10.0); // percent: 10-90 range
+    var hstretch_by_mag = (mag / 5.0) + 1.0;
 
     var img = new Image();
     img.onload = function(ev) {
-      var img_elem = ev.srcElement;
-      //render_to_overlapping_divs(img_elem);
-      //render_to_sequence(img_elem);
-      //render_to_canvases(img_elem);
-      //render_to_1canvas(img_elem);
-      render_canvas(img_elem);
-      console.log(" *onAdd-image(rendered): " + eid);
+      var img_elem = ev.srcElement; // still need this here?
+      Pixastic.process(img, "blurfast", {amount: blur_by_depth});
+      render_canvas(img_elem, hstretch_by_mag, opacity_by_mag);
     }
     // w/jquery set img element's attributes before it is loaded
     var jq_img = $(img);
