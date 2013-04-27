@@ -20,6 +20,7 @@ var ImageModel = Backbone.Model.extend({
   initialize: function(ignore1, options) {
     this.set('depth', options.depth);
     this.set('eqid', options.eqid);
+    this.set('search', options.search);
     console.log("IMAGE MODEL(" + options.eqid + ")");
     this.set('mag', options.mag);
     this.set('image_id', 'i' + this.get('id'));
@@ -88,7 +89,8 @@ var ImageDataSource = Backbone.Collection.extend({
       lat: latitude,
       mag: magnitude,
       depth: depth,
-      eqid: id
+      eqid: id,
+      search: 'primary'
     });
   },
 
@@ -121,8 +123,9 @@ var ImageDataSource = Backbone.Collection.extend({
         //console.log("Secondary search");
         var self = this;
         var params = {
-            text: 'landscape'
+            text: 'farm'
         };
+        eq_event['search'] = 'secondary';
 	var data_params = {};
         _.extend(data_params, self.base_params, params);
         $.ajax({
@@ -143,18 +146,6 @@ var ImageDataSource = Backbone.Collection.extend({
             },
         });
   },
-
-/*
-  test: function() {
-    var self = this;
-    var o = {
-      url: 'http://farm9.staticflickr.com/8369/8395417897_9fe9592eff_c_d.jpg',
-      image_id: 3
-    };
-    o.proxy_url = '/proxy?url=' + o.url;
-    self.add(o);
-  },
-*/
 
   request_remove: function(image_id) {
     //console.log("  ImageDataSource: request_remove(" + image_id + ")");
