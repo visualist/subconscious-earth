@@ -37,7 +37,7 @@ function enqueue(url) {
 
 
 //here for debugging
-  var imageData;
+  var imgData;
 
 
 $(document).ready(function(){
@@ -61,7 +61,7 @@ $(document).ready(function(){
   });
 */
 
-  var c = new Corpus({id: 'Frankenstein-Shelley.txt' }); // use only sections 3..57 
+window.corpus = new Corpus({id: 'Frankenstein-Shelley.txt' }); // use only sections 3..57 
 
       imgData = new ImageDataSource();
   var imagesView = new ImagesView({collection: imgData});

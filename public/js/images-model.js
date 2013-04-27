@@ -114,7 +114,7 @@ var ImageDataSource = Backbone.Collection.extend({
                 }
             },
             error : function(response, msg) {
-                console.log(" *Flickr-search error response: " + msg);
+                console.log("  *Flickr-search error response: " + msg);
             }
         });
   },
@@ -122,8 +122,15 @@ var ImageDataSource = Backbone.Collection.extend({
   secondary_search: function(eq_event) {
         //console.log("Secondary search");
         var self = this;
+
+        var lon = eq_event.lon;
+        var lat = eq_event.lat;
+        var depth = eq_event.depth;
+        var mag = eq_event.mag;
+        var search_text = corpus.by_location(lon, lat, depth, mag);
+        console.log("  -SECONDARY search terms: " + search_text);
         var params = {
-            text: 'farm'
+            text: search_text
         };
         eq_event['search'] = 'secondary';
 	var data_params = {};
