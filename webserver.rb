@@ -28,6 +28,7 @@ get '/proxy' do
   url = params[:url]
   raise "GTFO" if (url[0] == '/' || url[0] == '.')
   open(url) do |content|
+    content_type content.content_type
     content.read.to_s.gsub(/(href|src)=("|')\//, '\1=\2' + url + '/')
   end
 end
