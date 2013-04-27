@@ -20,9 +20,14 @@ $(document).ready(function() {
  *  - series of canvas tags
  *  - single canvas, add all photos to it
  */
-var once = 1;
 
-function render_to_1canvas(im, hscale, alpha) {
+
+
+// moving within ImagesView
+var xoncex = 1;
+
+// moving within ImagesView
+function xrender_to_1canvasx(im, hscale, alpha) {
   var canvas;
   if (once-- > 0) {
     canvas = document.createElement('canvas');
@@ -37,14 +42,13 @@ function render_to_1canvas(im, hscale, alpha) {
   var ctx = canvas.getContext('2d');
   // alpha (0-1): conversion from opacity (0-100 percent)
   ctx.globalAlpha = alpha;
-
   // horizontal scaling
   ctx.scale(hscale, 1.0);
-
   ctx.drawImage(im,0,0, viewport.width, viewport.height);
 }
 
-function render_canvas(img, hstretch, opacity) {
+// moving within ImagesView
+function xrender_canvasx(img, hstretch, opacity) {
   $('#hidden-images').append(img);
   var alpha = (opacity / 100.0);
   render_to_1canvas(img, hstretch, alpha);
@@ -52,13 +56,45 @@ function render_canvas(img, hstretch, opacity) {
 
 
 
+
 var ImagesView = Backbone.View.extend({
 
   initialize: function(options) {
-    this.collection.on("add", this.onAdd);
-    this.collection.on("remove", this.onRemove);
-    this.collection.on("update", this.onUpdate);
+    this.collection.on("add", this.onAdd, this);
+    this.collection.on("remove", this.onRemove, this);
+    this.collection.on("update", this.onUpdate, this);
     this.__whoami = 'ImagesView'; //debugging
+    this.once = 1;
+  },
+
+  render_to_1canvas: function(im, hscale, alpha) {
+    var self = this;
+    var canvas;
+
+    // TODO: refactor this logic into initialize
+    if (self.once-- > 0) {
+      canvas = document.createElement('canvas');
+      canvas.id = 'c1';
+      var canvases = document.getElementById("canvases");
+      canvases.appendChild(canvas);
+      canvas.width  = viewport.width;
+      canvas.height = viewport.height;
+    } else {
+      canvas = document.getElementById("c1");
+    }
+    var ctx = canvas.getContext('2d');
+    // alpha (0-1): conversion from opacity (0-100 percent)
+    ctx.globalAlpha = alpha;
+    // horizontal scaling
+    ctx.scale(hscale, 1.0);
+    ctx.drawImage(im,0,0, viewport.width, viewport.height);
+  },
+
+  render_canvas: function(img, hstretch, opacity) {
+    var self = this;
+    $('#hidden-images').append(img);
+    var alpha = (opacity / 100.0);
+    self.render_to_1canvas(img, hstretch, alpha);
   },
 
   onAdd: function(img_model) {
@@ -85,10 +121,10 @@ var ImagesView = Backbone.View.extend({
     var hstretch_by_mag = (mag / 5.0) + 1.0;
 
     var img = new Image();
-    img.onload = function(ev) {
+    img.onload = function(ev, alt) {
       var img_elem = ev.srcElement; // still need this here?
       Pixastic.process(img, "blurfast", {amount: blur_by_depth});
-      render_canvas(img_elem, hstretch_by_mag, opacity_by_mag);
+      self.render_canvas(img_elem, hstretch_by_mag, opacity_by_mag);
     }
     // w/jquery set img element's attributes before it is loaded
     var jq_img = $(img);
