@@ -121,7 +121,7 @@ var ImageDataSource = Backbone.Collection.extend({
         //console.log("Secondary search");
         var self = this;
         var params = {
-            text: 'tower'
+            text: 'landscape'
         };
 	var data_params = {};
         _.extend(data_params, self.base_params, params);
