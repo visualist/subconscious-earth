@@ -35,7 +35,10 @@ var Corpus = Backbone.Model.extend({
     var vscale = Math.floor(section.length*0.90);
     var strpos = Math.floor(vscale*(vmap/180));
 
-    var word_len = Math.floor(2.3 + mag); //arbitrary increment
+    if (mag>9.9) { mag = 9.9; } // hope it never happens!
+    var factor = 10.0 / 3;
+    var word_len = Math.ceil((10 - mag)/factor);
+
     var cleanstr = section.substr(strpos).replace(/[\n-,';:]/g," ").replace(/--/g," ");
     var nextword_i = cleanstr.search(" ");
     var w = cleanstr.substr(nextword_i).split(/ /);
