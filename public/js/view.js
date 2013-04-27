@@ -21,42 +21,6 @@ $(document).ready(function() {
  *  - single canvas, add all photos to it
  */
 
-
-
-// moving within ImagesView
-var xoncex = 1;
-
-// moving within ImagesView
-function xrender_to_1canvasx(im, hscale, alpha) {
-  var canvas;
-  if (once-- > 0) {
-    canvas = document.createElement('canvas');
-    canvas.id = 'c1';
-    var canvases = document.getElementById("canvases");
-    canvases.appendChild(canvas);
-    canvas.width  = viewport.width;
-    canvas.height = viewport.height;
-  } else {
-    canvas = document.getElementById("c1");
-  }
-  var ctx = canvas.getContext('2d');
-  // alpha (0-1): conversion from opacity (0-100 percent)
-  ctx.globalAlpha = alpha;
-  // horizontal scaling
-  ctx.scale(hscale, 1.0);
-  ctx.drawImage(im,0,0, viewport.width, viewport.height);
-}
-
-// moving within ImagesView
-function xrender_canvasx(img, hstretch, opacity) {
-  $('#hidden-images').append(img);
-  var alpha = (opacity / 100.0);
-  render_to_1canvas(img, hstretch, alpha);
-}
-
-
-
-
 var ImagesView = Backbone.View.extend({
 
   initialize: function(options) {
@@ -64,24 +28,21 @@ var ImagesView = Backbone.View.extend({
     this.collection.on("remove", this.onRemove, this);
     this.collection.on("update", this.onUpdate, this);
     this.__whoami = 'ImagesView'; //debugging
-    this.once = 1;
+    this.setup_canvas();
+  },
+
+  setup_canvas: function() {
+    canvas = document.createElement('canvas');
+    canvas.id = 'c1';
+    var canvases = document.getElementById("canvases");
+    canvases.appendChild(canvas);
+    canvas.width  = viewport.width;
+    canvas.height = viewport.height;
   },
 
   render_to_1canvas: function(im, hscale, alpha) {
     var self = this;
-    var canvas;
-
-    // TODO: refactor this logic into initialize
-    if (self.once-- > 0) {
-      canvas = document.createElement('canvas');
-      canvas.id = 'c1';
-      var canvases = document.getElementById("canvases");
-      canvases.appendChild(canvas);
-      canvas.width  = viewport.width;
-      canvas.height = viewport.height;
-    } else {
-      canvas = document.getElementById("c1");
-    }
+    var canvas = document.getElementById("c1");
     var ctx = canvas.getContext('2d');
     // alpha (0-1): conversion from opacity (0-100 percent)
     ctx.globalAlpha = alpha;
