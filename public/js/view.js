@@ -71,19 +71,6 @@ var ImagesView = Backbone.View.extend({
 
   render_image: function(img_element, img_model) {
     var search = img_model.get('search');
-
-/*
-    var msg = "==> RENDER_IMAGE (to hidden area): " + img_element.id;
-    if (search === 'primary') {
-      msg = msg + " .. via PRIMARY search!!";
-    } else if (search === 'secondary') {
-      msg = msg + " .. via SECONDARY search";
-    } else {
-      msg = msg + " .. via ways unknown -- is that not amazing?";
-    }
-    console.log(msg);
-*/
-
     $('#hidden-images').append(img_element); // storage place for images
 
     var depth = img_model.get('depth');
