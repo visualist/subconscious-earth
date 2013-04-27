@@ -24,15 +24,11 @@ $(document).ready(function() {
 var ImagesView = Backbone.View.extend({
 
   initialize: function(options) {
-    this.el = $("canvas#c1"); // ?
+    this.__whoami = 'ImagesView'; //debugging
     this.collection.on("add", this.onAdd, this);
     this.collection.on("remove", this.onRemove, this);
     this.collection.on("update", this.onUpdate, this);
-    this.__whoami = 'ImagesView'; //debugging
-    this.setup_canvas();
-  },
-
-  setup_canvas: function() {
+    this.el = $("canvas#c1"); // ?
     var canvas = document.getElementById("c1"); // not really the backbone idiom
     canvas.width  = viewport.width;
     canvas.height = viewport.height;
@@ -77,6 +73,7 @@ var ImagesView = Backbone.View.extend({
     jq_img.css({opacity: opacity_by_mag});
 
     Pixastic.process(img_element, "blurfast", {amount: blur_by_depth});
+
     self.render_canvas(img_element, hstretch_by_mag, opacity_by_mag);
   },
 
