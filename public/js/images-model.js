@@ -21,6 +21,9 @@ var ImageModel = Backbone.Model.extend({
     this.set('depth', options.depth);
     this.set('eqid', options.eqid);
     this.set('search', options.search);
+    if (options.terms) {
+      this.set('terms', options.terms);
+    }
     console.log("IMAGE MODEL(" + options.eqid + ")");
     this.set('mag', options.mag);
     this.set('image_id', 'i' + this.get('id'));
@@ -132,6 +135,7 @@ var ImageDataSource = Backbone.Collection.extend({
         var params = {
             text: search_text
         };
+        eq_event['terms'] = search_text;
         eq_event['search'] = 'secondary';
 	var data_params = {};
         _.extend(data_params, self.base_params, params);
@@ -141,11 +145,13 @@ var ImageDataSource = Backbone.Collection.extend({
             dataType : 'jsonp',
             jsonp : 'jsoncallback',
             success : function (response, msg) {
-                var photo_list = response.photos.photo;
-                var result_count = photo_list.length;
-                console.log("  Secondary-search response: " + msg + " (" + eq_event.eqid + ") " + result_count);
-                if (photo_list instanceof Array && result_count > 0) {
-                  self.add( photo_list, eq_event );
+                if (response.photos) {
+                  var photo_list = response.photos.photo;
+                  var result_count = photo_list.length;
+                  console.log("  Secondary-search response: " + msg + " (" + eq_event.eqid + ") " + result_count);
+                  if (photo_list instanceof Array && result_count > 0) {
+                    self.add( photo_list, eq_event );
+                  }
                 }
             },
             error : function (response, msg) {
@@ -155,15 +161,19 @@ var ImageDataSource = Backbone.Collection.extend({
   },
 
   request_remove: function(image_id) {
-    //console.log("  ImageDataSource: request_remove(" + image_id + ")");
     var self = this;
-    var model = self.get(image_id);
+    // would like to use 'findWhere' - but must be using older Backbone at the moment
+    var models = self.where({eqid: event_id});
+    var model = models[0];
     self.remove(model);
   },
 
-  request_update: function(image_id) {
-    //console.log("  ImageDataSource: request_update(" + image_id + ")");
-    //TBD
+  request_update: function(event_id) {
+    var self = this;
+    // would like to use 'findWhere' - but must be using older Backbone at the moment
+    var models = self.where({eqid: event_id});
+    var model = models[0];
+    self.trigger('update', model);
   }
 
 });

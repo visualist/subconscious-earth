@@ -57,16 +57,19 @@ var ImagesView = Backbone.View.extend({
 
       var alpha = (opacity_by_mag / 100.0);
       if (search === 'secondary') {
-        alpha = alpha * 0.25;
+        alpha = alpha * 0.50;
       }
 
+      // TODO: FIX: blur is NOT working!
       Pixastic.process(im, "blurfast", {amount: blur_by_depth});
 
       // alpha (0-1): conversion from opacity (0-100 percent)
       ctx.globalAlpha = alpha;
       ctx.scale(hscale, 1.0); // horizontal scaling
-      ctx.drawImage(im,0,0, viewport.width, viewport.height);
+      ctx.drawImage(im, 0, 0, viewport.width, viewport.height);
     });
+    // adjust overall contrast
+    Pixastic.process(canvas, "brightness", {brightness:0, contrast:2.0});
   },
 
   render_image: function(img_element, img_model) {
@@ -85,8 +88,13 @@ var ImagesView = Backbone.View.extend({
     jq_img.attr({
       'data-depth': depth,
       'data-mag': mag,
-      'data-search': search
+      'data-search': search,
+      'data-earth': 'yes', // temporary
     });
+    var search_terms = img_model.get('terms');
+    if (search_terms) {
+      jq_img.attr({ 'data-terms': search_terms });
+    }
   },
 
 
