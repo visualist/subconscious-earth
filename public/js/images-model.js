@@ -160,7 +160,7 @@ var ImageDataSource = Backbone.Collection.extend({
         });
   },
 
-  request_remove: function(image_id) {
+  request_remove: function(event_id) {
     var self = this;
     // would like to use 'findWhere' - but must be using older Backbone at the moment
     var models = self.where({eqid: event_id});
