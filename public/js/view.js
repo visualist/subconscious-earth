@@ -118,14 +118,29 @@ var ImagesView = Backbone.View.extend({
   },
 
   onRemove: function(img_model) {
-    var eid = img_model.get('eqid');
-    console.log(" *onRemove-image: " + eid);
-    $('#' + eid).remove();
+    var self = this;
+    if (img_model) {
+      var eid = img_model.get('eqid');
+      console.log(" *onRemove-image: " + eid);
+      $('#' + eid).remove();
+      self.render_canvas();
+    }
   },
 
   onUpdate: function(img_model)  {
-    var eid = img_model.get('eqid');
-    console.log(" *onUpdate-image: " + eid);
+    var self = this;
+    if (img_model) {
+      var eid = img_model.get('eqid');
+      console.log(" *onUpdate-image: " + eid);
+      var found_images = $('img#' + eid);
+      if (found_images) {
+        // degrade image over time by adding noise
+        // (of course this would be reset if the page were reloaded)
+        var img = found_images[0];
+        Pixastic.process(img, "noise", {mono:true, amount:0.6, strength:0.15});
+      }
+      self.render_canvas();
+    }
   },
 
 });
