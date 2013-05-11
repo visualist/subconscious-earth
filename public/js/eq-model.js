@@ -15,8 +15,9 @@ var Earthquake = Backbone.Model.extend({
 
 
 var default_frequency = 60000;
-var default_url = '/proxy?url=http://earthquake.usgs.gov/earthquakes/feed/csv/all/hour';
+//var default_url = '/proxy?url=http://earthquake.usgs.gov/earthquakes/feed/csv/all/hour';
 //var default_url = '/proxy?url=http://earthquake.usgs.gov/earthquakes/feed/csv/2.5/day';
+var default_url = '/proxy?url=http://earthquake.usgs.gov/earthquakes/feed/v0.1/summary/all_hour.csv';
 
 
 var EqDataSource = Backbone.Collection.extend({
