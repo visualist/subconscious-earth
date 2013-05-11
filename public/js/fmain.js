@@ -61,7 +61,11 @@ $(document).ready(function(){
   });
 */
 
-window.corpus = new Corpus({id: 'Frankenstein-Shelley.txt' }); // use only sections 3..57 
+//var corpus_text = 'Frankenstein-Shelley.txt'; // use only sections 3..57 
+//var corpus_text = 'Ulysses-Joyce.txt';
+var corpus_text = 'Made-Up.txt';
+
+window.corpus = new Corpus({id: corpus_text });
 
       imgData = new ImageDataSource();
   var imagesView = new ImagesView({collection: imgData});
