@@ -11,6 +11,17 @@ $(document).ready(function() {
       width: x, height: y
   };
   console.log("Viewport: w=" + viewport.width + ", h=" + viewport.height);
+
+  $("#canvases").click(function(e){
+    //console.log('click');
+    //console.log(e);
+    var x = e.offsetX;
+    var y = e.offsetY;
+    console.log("coord: (" + x + ","  + y + ")");
+    if (x < 150) {
+      $("#c1").pixastic("blur");
+    }
+  });
 });
 
 
@@ -22,6 +33,20 @@ $(document).ready(function() {
  */
 
 var ImagesView = Backbone.View.extend({
+
+  events: {
+    'click': 'logClick',
+    'keyup :input': 'logKey',
+    'keypress :input': 'logKey'
+  },
+
+  logClick: function(e) {
+    console.log(e);
+  },
+
+  logKey: function(e) {
+    console.log(e.type, e.keyCode);
+  },
 
   initialize: function(options) {
     this.__whoami = 'ImagesView'; //debugging
@@ -52,24 +77,31 @@ var ImagesView = Backbone.View.extend({
       // mag(nitude) translates to opacity & horizontal-stretch
       //   ranges:: mag: 0-10, opacity: 10-90 percent, hstretch: 1.0-3.0
       var opacity_by_mag = Math.floor(8.0 * mag + 10.0); // percent: 10-90 range
-      var hstretch_by_mag = 1.1; // (mag / 5.0) + 1.0;
-      var hscale = hstretch_by_mag;
+      //var hstretch_by_mag = 1.1;
+      var hstretch_by_mag = (mag / 5.0) + 1.0;
 
+      var hscale = hstretch_by_mag;
       var alpha = (opacity_by_mag / 100.0);
       if (search === 'secondary') {
         alpha = alpha * 0.50;
       }
 
       // TODO: FIX: blur is NOT working!
-      Pixastic.process(im, "blurfast", {amount: blur_by_depth});
+      console.log("Add BLUR to " + jqimg.attr('id') + " by " + blur_by_depth);
+      var options = {amount: blur_by_depth};
+      jqimg.pixastic("blur", options, function(newImage) { // was blurfast
+        console.log('options (from blurfast)..');
+        console.log(options);
+      });
+      //Pixastic.process(im, "blurfast", {amount: blur_by_depth});
 
       // alpha (0-1): conversion from opacity (0-100 percent)
       ctx.globalAlpha = alpha;
-      ctx.scale(hscale, 1.0); // horizontal scaling
+      //ctx.scale(hscale, 1.0); // horizontal scaling : buggy?
       ctx.drawImage(im, 0, 0, viewport.width, viewport.height);
     });
     // adjust overall contrast
-    Pixastic.process(canvas, "brightness", {brightness:0, contrast:2.0});
+    $("#c1").pixastic("brightness", {brightness:0, contrast:2.0});
   },
 
   render_image: function(img_element, img_model) {
@@ -137,7 +169,8 @@ var ImagesView = Backbone.View.extend({
         // degrade image over time by adding noise
         // (of course this would be reset if the page were reloaded)
         var img = found_images[0];
-        Pixastic.process(img, "noise", {mono:true, amount:0.6, strength:0.15});
+        var jqimg = $(img);
+        jqimg.pixastic("noise", {mono:true, amount:0.6, strength:3.15}).pixastic("blur");
       }
       self.render_canvas();
     }
