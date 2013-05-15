@@ -32,7 +32,7 @@ var ImageModel = Backbone.Model.extend({
     if (url) {
       var eqid = this.get('eqid');
       console.log("-flickr image for eq " + eqid + "at " + url);
-      this.set('proxy_url', '/proxy?url=' + url);
+      this.set('proxy_url', '/proxyimage?url=' + url);
     } else {
       console.log("No available URL found for " + this.get('id'));
     }

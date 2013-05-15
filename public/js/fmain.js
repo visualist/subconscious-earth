@@ -24,7 +24,7 @@ var viewport;
 function enqueue(url) {
   if (url) {
     //console.log("ENQUEUE: " + url);
-    var proxy_url = '/proxy?url=' + url; // might need encoding of some sort
+    var proxy_url = '/proxyimage?url=' + url; // might need encoding of some sort
     //console.log("PROXY URL: " + proxy_url);
     var img = $('<img/>').attr({src: proxy_url});
     if (viewport.width > 50) {
