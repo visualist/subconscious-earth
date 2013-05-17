@@ -13,8 +13,6 @@ $(document).ready(function() {
   console.log("Viewport: w=" + viewport.width + ", h=" + viewport.height);
 
   $("#canvases").click(function(e){
-    //console.log('click');
-    //console.log(e);
     var x = e.offsetX;
     var y = e.offsetY;
     console.log("coord: (" + x + ","  + y + ")");
@@ -49,7 +47,7 @@ var ImagesView = Backbone.View.extend({
   },
 
   initialize: function(options) {
-    this.__whoami = 'ImagesView'; //debugging
+    this.__whoami = 'ImagesView';
     this.collection.on("add", this.onAdd, this);
     this.collection.on("remove", this.onRemove, this);
     this.collection.on("update", this.onUpdate, this);

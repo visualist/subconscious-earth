@@ -50,15 +50,5 @@ var Corpus = Backbone.Model.extend({
     var words = _.compact(w).slice(0, word_len);
     return words.join(" ");
   }
-
-//,
-
-  /* TODO: move this into a VIEW */
-/*
-  render: function(words, lon, lat, dep, mag) {
-    console.log(words + '@' + mag );
-  }
-*/
-
 });
 

@@ -10,7 +10,7 @@ var EqEventController = Backbone.View.extend({
     this.collection.on("remove", this.onRemove, this);
     this.collection.on("update", this.onUpdate, this);
     this.image_data = options.image_data;
-    this.__whoami = 'EqEventController'; //debugging
+    this.__whoami = 'EqEventController';
   },
 
   onAdd: function(eq) {
@@ -30,16 +30,9 @@ var EqEventController = Backbone.View.extend({
     var s = eqevent + ': ' + strength + ' ' + latlon;
     var li_element = '<li id="' + event_id +  '">' + s + '</li>';
 
-    // show the event in text:
-    //$('#eq-events').append(li_element);
-    //console.log(s);
-
-    // trigger image display:
-    //this.image_data.request_add(event_id, lat, lon, mag, depth);
     if (this.image_data) {
       var imageAdd = this.image_data.request_add;
       if (imageAdd) {
-        //console.log(" >imageAdd(" + event_id + ")");
         imageAdd(event_id, lat, lon, mag, depth);
       }
     }
@@ -48,11 +41,10 @@ var EqEventController = Backbone.View.extend({
   onRemove: function(eq) {
     var event_id = eq.get('event_id');
     var css_id = '#' + event_id;
-    //$(css_id).remove();
+
     if (this.image_data) {
       var imageRemove = this.image_data.request_remove;
       if (imageRemove) {
-        //console.log(" >imageRemove(" + event_id + ")");
         imageRemove(event_id);
       }
     }
@@ -63,7 +55,6 @@ var EqEventController = Backbone.View.extend({
       var imageUpdate = this.image_data.request_update;
       if (imageUpdate) {
         var event_id = eq.get('event_id');
-        //console.log(" >imageUpdate(" + event_id + ")");
         imageUpdate(event_id);
       }
     }

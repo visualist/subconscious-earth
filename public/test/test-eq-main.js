@@ -11,15 +11,12 @@ $(document).ready(function(){
     image_data: {
 
       request_add: function(id, lat, lon, mag, depth) {
-        //console.log("    => add(" + id + " ..)");
       },
 
       request_remove: function(id) {
-        //console.log("    => remove(" + id + ")");
       },
 
       request_update: function(id) {
-        //console.log("    => update(" + id + ")");
       }
     }
   });

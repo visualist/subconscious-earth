@@ -79,8 +79,6 @@ var ImageDataSource = Backbone.Collection.extend({
   request_add: function(id, latitude, longitude, magnitude, depth) {
     console.log("  ImageDataSource: request_add(" + id + " ..)");
     // presently, magnitude & depth are ignored/not used.
-    //console.log('ImageDataSource :: request_add');
-
     // TODO: change this call-interface, fold into a single object.
     this.flickr_search({
       lon: longitude,

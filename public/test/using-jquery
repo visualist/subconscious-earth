@@ -8,8 +8,6 @@ function get_data(fn) {
     url: 'http://earthquake.usgs.gov/earthquakes/feed/geojsonp/all/hour',
     callback: "eqfeed_callback",
     success: function(json) {
-      //console.log("Success w/$.jsonp");
-      //console.log(json);
       fn(json.features);
     },
     error: function() {
@@ -23,7 +21,6 @@ function process_data(d) {
   _.each(d, function(row) {
     var geo_coord = row.geometry.coordinates;
     var geo_props = row.properties;
-    // assume type point
     var coord = {
       longitude: geo_coord[0],
       latitude: geo_coord[1],
@@ -31,7 +28,6 @@ function process_data(d) {
     };
     console.log(coord);
     console.log(row);
-// time, tz, mag
   });
 
 }
