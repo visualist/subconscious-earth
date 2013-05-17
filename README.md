@@ -7,7 +7,8 @@ Art-a-Whirl 2013
 ----------------
 
 If you're in NE Minneapolis during Art-a-Whirl 2013, May 17-19, stop by
-Worrell Design gallery to see the installation of Subconscious Earth.
+Worrell Design gallery, at 1414 Marshall NE, to see the installation of
+Subconscious Earth.
 
 For more information on Art-a-Whirl: http://nemaa.org/art-a-whirl/dates
 
