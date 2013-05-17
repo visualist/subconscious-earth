@@ -3,6 +3,15 @@
                          -- Sol Lewitt
 
 
+Art-a-Whirl 2013
+----------------
+
+If you're in NE Minneapolis during Art-a-Whirl 2013, May 17-19, stop by
+Worrell Design gallery to see the installation of Subconscious Earth.
+
+For more information on Art-a-Whirl: http://nemaa.org/art-a-whirl/dates
+
+
 Subconscious Earth
 ==================
 
@@ -36,15 +45,14 @@ these photographs are geo-coded, meaning longitude and latitude
 data are available (in fact, searchable). So matching seismic
 activity with imagery can be done through longitude and latitude.
 
-My project, Subconscious Earth, attempts to interpret the Earth's
-dreams through a temporal manifestation of combined imagery resulting
-from Earth's seismic stimuli: it monitors worldwide seismic data
-from the USGS and reacts to the earthquakes as they occur by finding
-Flickr images and meshing the imagery together with recent activity
-(events older than an hour are forgotten). One image is associated
-with each seismic event, it's longitude, latitude, magnitude and
-depth. These four data-points are used in rendering the combination
-of images.
+Subconscious Earth attempts to interpret the Earth's dreams through
+a temporal manifestation of combined imagery resulting from Earth's
+seismic stimuli: it monitors worldwide seismic data from the USGS
+and reacts to the earthquakes as they occur by finding Flickr images
+and meshing the imagery together with recent activity (events older
+than an hour are forgotten). One image is associated with each
+seismic event, it's longitude, latitude, magnitude and depth. These
+four data-points are used in rendering the combination of images.
 
 The most frequent seismic activity consist of very small, sometimes
 imperceptible, earthquakes. In response, Subconscious Earth renders
