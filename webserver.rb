@@ -1,6 +1,4 @@
 
-#$LOAD_PATH.unshift File.expand_path(".")
-
 require 'rubygems'
 require 'bundler'
 require 'json'
@@ -13,6 +11,8 @@ enable :logging
 
 
 class UrlCache
+  attr_reader :url, :file, :basename, :extension, :path
+
   # NOTE: no cache invalidation exists yet!
   def initialize(url)
     @url = url
@@ -65,40 +65,27 @@ get '/proxydata' do
   end
 end
 
-# OLD and Deprecated:
-get '/proxy' do
-  url = params[:url]
-  raise "Bad URL" if (url[0] == '/' || url[0] == '.')
-  cache = UrlCache.new(url)
-# throw_away = cache.path
-  begin
-    file_response = open(url) do |content|
-      content_type content.content_type
-      content.read.to_s.gsub(/(href|src)=("|')\//, '\1=\2' + url + '/')
-    end
-    cache.write(file_response)
-    file_response
-  rescue
-    File.read(cache.path)
-  end
-end
-
 get '/proxyimage' do
   url = params[:url]
   raise "Bad URL" if (url[0] == '/' || url[0] == '.')
 
   cache = UrlCache.new(url)
-  return File.read(cache.path) if cache.exists?
-
-  begin
-    file_response = open(url) do |content|
-      content_type content.content_type
-      content.read.to_s.gsub(/(href|src)=("|')\//, '\1=\2' + url + '/')
+  if cache.exists?
+    # TODO: content_type
+    content_type 'image/jpeg' if cache.extension =~ /jp(e)?g/i
+    File.read(cache.path) if cache.exists?
+  else
+    begin
+      file_response = open(url) do |content|
+        content_type content.content_type
+        content.read.to_s.gsub(/(href|src)=("|')\//, '\1=\2' + url + '/')
+      end
+      # TODO: save content_type
+      cache.write(file_response)
+      file_response
+    rescue
+      #File.read(cache.path)
+      puts "ERROR: could not get Flickr URL: #{url}"
     end
-    cache.write(file_response)
-    file_response
-  rescue
-    #File.read(cache.path)
-    puts "ERROR: could not get Flickr URL: #{url}"
   end
 end
