@@ -1,5 +1,5 @@
-source "http://gemcutter.org"
 source "https://rubygems.org"
+#source "http://gemcutter.org"
 
 gem "sinatra"
 gem "sqlite3"
