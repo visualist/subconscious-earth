@@ -15,7 +15,7 @@ var Earthquake = Backbone.Model.extend({
 
 
 var default_frequency = 60000;
-var default_url = '/proxydata?url=http://earthquake.usgs.gov/earthquakes/feed/v0.1/summary/all_hour.csv';
+var default_url = '/proxydata?url=http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.csv';
 
 
 var EqDataSource = Backbone.Collection.extend({
@@ -48,26 +48,38 @@ var EqDataSource = Backbone.Collection.extend({
         var _new = []; //incoming from fetch, determined in 'loop' below
 
         this.each(function(row){
-          var event_id = row.EventID;
+          var event_id = row.id; // was EventID
           // all "NEW events" coming in this fetch-round..
           _new.push(event_id);
           if (! _eq_events[event_id]) {
             var earthquake_event = {
               id       : event_id,
               event_id : event_id,
-              time     : row.DateTime,
-              lon      : row.Longitude,
-              lat      : row.Latitude,
-              depth    : row.Depth,
-              mag      : row.Magnitude,
-              magtype  : row.MagType,
-              nbstations : row.NbStations,
-              gap      : row.Gap,
-              distance : row.Distance,
-              rms      : row.RMS,
-              source   : row.Source,
-              version  : row.Version,
-              rendered : false
+              time     : row.time, // was DateTime
+              lon      : row.longitude, // was Longitude
+              lat      : row.latitude, // was Latitude
+              depth    : row.depth, // was Depth
+              mag      : row.mag, // was Magnitude
+              magtype  : row.magType, // was MagType
+              gap      : row.gap, // was Gap
+              rms      : row.rms, // was RMS
+
+              // New fields in v1.0:
+              _id      : row._id,
+              dmin     : row.dmin,
+              net      : row.net,
+              nst      : row.nst,
+              place    : row.place,
+              type     : row.type,
+              updated  : row.updated,
+
+              rendered : false // internal, app-support
+
+              // Fields no longer supported in v1.0:
+              //nbstations : row.NbStations
+              //distance : row.Distance,
+              //source   : row.Source,
+              //version  : row.Version,
             };
             _eq_events[event_id] = earthquake_event;
             // Note: the 'add' could go here
