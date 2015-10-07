@@ -5,7 +5,7 @@ var imgData;
 window.cfg = {};
 
 
-cfg.flickr_url = 'http://api.flickr.com/services/rest/';
+cfg.flickr_url = 'https://api.flickr.com/services/rest/';
 cfg.key = '2693b44e9b45ca1d5b20a9e9655c9036';
 
 
