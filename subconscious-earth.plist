@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+
+<plist version="1.0">
+
+<dict>
+
+    <key>SubconsciousEarth</key>
+    <string>com.wadestebbings.subconsciousearth</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/wade/subconscious-earth/boot.sh</string>
+    </array>
+
+    <key>KeepAlive</key>
+    <true/>
+
+</dict>
+
+</plist>
