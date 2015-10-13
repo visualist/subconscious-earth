@@ -137,14 +137,23 @@ var ImagesView = Backbone.View.extend({
     var eid = img_model.get('eqid');
     console.log("onAdd(image) iid=" + iid + " for " + eid);
     var img = new Image();
-    img.onload = function(ev) {
-      var img_elem = ev.srcElement;
-      self.render_image(img_elem, img_model);
+
+    function imageLoadHandler() {
+      // img & img_model objects grabbed from closure
+      self.render_image(img, img_model);
       self.render_canvas();
     }
+
+    var loaded = false;
+    img.onload = imageLoadHandler;
     img.id = eid;
     img.src = url;
-    console.log("  *onAdd-image(queued): " + eid);
+    //console.log("  *** onAdd-image(queued): " + eid);
+
+    if (img.complete) {
+      img.onload = imageLoadHandler();
+    }
+
   },
 
   onRemove: function(img_model) {
